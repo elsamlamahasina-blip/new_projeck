@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Master\CustomerController;
+use App\Http\Controllers\Master\ProductController;
+use App\Http\Controllers\Master\VendorController;
+use App\Http\Controllers\Master\WarehouseController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleDashboardController;
 use Illuminate\Support\Facades\Route;
@@ -45,6 +49,22 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Master Data
+    Route::prefix('master')->name('master.')->group(function () {
+        Route::resource('vendors', VendorController::class)->except(['show']);
+        Route::resource('customers', CustomerController::class)->except(['show']);
+        Route::resource('warehouses', WarehouseController::class)->except(['show']);
+        Route::resource('products', ProductController::class);
+
+        // Product Variant sub-routes
+        Route::post('products/{product}/variants', [ProductController::class, 'storeVariant'])
+            ->name('products.variants.store');
+        Route::put('products/{product}/variants/{variant}', [ProductController::class, 'updateVariant'])
+            ->name('products.variants.update');
+        Route::delete('products/{product}/variants/{variant}', [ProductController::class, 'destroyVariant'])
+            ->name('products.variants.destroy');
+    });
 });
 
 require __DIR__.'/auth.php';

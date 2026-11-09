@@ -58,6 +58,25 @@
                             EIS Eksekutif
                         </a>
                     @endrole
+
+                    <!-- Master Data Dropdown -->
+                    <div class="inline-flex items-center" x-data="{ openMaster: false }">
+                        <div class="relative">
+                            <button @click="openMaster = !openMaster" @click.outside="openMaster = false"
+                                class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('master.*') ? 'bg-amber-600 text-white font-semibold' : 'text-amber-200 hover:bg-batik-800' }} transition">
+                                <span>Master Data</span>
+                                <svg class="ms-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+                            <div x-show="openMaster" x-cloak x-transition class="absolute left-0 mt-2 w-52 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 z-50 text-gray-700">
+                                <a href="{{ route('master.products.index') }}" class="block px-4 py-2 text-sm hover:bg-amber-50 hover:text-amber-900 {{ request()->routeIs('master.products.*') ? 'font-bold bg-amber-50 text-amber-900' : '' }}">Produk Batik & Varian</a>
+                                <a href="{{ route('master.vendors.index') }}" class="block px-4 py-2 text-sm hover:bg-amber-50 hover:text-amber-900 {{ request()->routeIs('master.vendors.*') ? 'font-bold bg-amber-50 text-amber-900' : '' }}">Vendor / Pemasok</a>
+                                <a href="{{ route('master.customers.index') }}" class="block px-4 py-2 text-sm hover:bg-amber-50 hover:text-amber-900 {{ request()->routeIs('master.customers.*') ? 'font-bold bg-amber-50 text-amber-900' : '' }}">Pelanggan (Reseller/Umum)</a>
+                                <a href="{{ route('master.warehouses.index') }}" class="block px-4 py-2 text-sm hover:bg-amber-50 hover:text-amber-900 {{ request()->routeIs('master.warehouses.*') ? 'font-bold bg-amber-50 text-amber-900' : '' }}">Gudang</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -141,6 +160,14 @@
             @role('eksekutif')
                 <x-responsive-nav-link :href="route('dashboard.eksekutif')">EIS Eksekutif</x-responsive-nav-link>
             @endrole
+
+            <div class="pt-2 pb-1 border-t border-amber-800">
+                <div class="px-4 text-xs font-semibold uppercase text-amber-400 tracking-wider">Master Data</div>
+                <x-responsive-nav-link :href="route('master.products.index')" :active="request()->routeIs('master.products.*')">Produk & Varian</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('master.vendors.index')" :active="request()->routeIs('master.vendors.*')">Vendor / Pemasok</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('master.customers.index')" :active="request()->routeIs('master.customers.*')">Pelanggan</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('master.warehouses.index')" :active="request()->routeIs('master.warehouses.*')">Gudang</x-responsive-nav-link>
+            </div>
         </div>
 
         <div class="pt-4 pb-1 border-t border-amber-700">
