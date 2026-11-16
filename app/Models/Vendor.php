@@ -26,4 +26,9 @@ class Vendor extends Model
             'is_active' => 'boolean',
         ];
     }
+
+    public function getContactNameAttribute(): ?string
+    {
+        return $this->contact_person;
+    }
 }

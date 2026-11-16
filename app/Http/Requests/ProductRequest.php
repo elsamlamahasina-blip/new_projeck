@@ -23,7 +23,7 @@ class ProductRequest extends FormRequest
 
             // Validasi varian awal opsional
             'variants' => ['nullable', 'array'],
-            'variants.*.sku' => ['required_with:variants', 'string', 'max:50'],
+            'variants.*.sku' => ['nullable', 'string', 'max:50'],
             'variants.*.size' => ['required_with:variants', 'string', 'max:20'],
             'variants.*.pattern' => ['required_with:variants', 'string', 'max:100'],
             'variants.*.cost_price' => ['nullable', 'numeric', 'min:0'],

@@ -14,12 +14,12 @@ class ProductVariantRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'sku' => ['required', 'string', 'max:50'],
+            'sku' => ['nullable', 'string', 'max:50'],
             'size' => ['required', 'string', 'max:20'],
             'pattern' => ['required', 'string', 'max:100'],
             'cost_price' => ['required', 'numeric', 'min:0'],
             'selling_price' => ['required', 'numeric', 'min:0'],
-            'min_stock' => ['required', 'integer', 'min:0'],
+            'min_stock' => ['nullable', 'integer', 'min:0'],
             'current_stock' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['sometimes', 'boolean'],
         ];

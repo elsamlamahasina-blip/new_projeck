@@ -16,8 +16,9 @@ class VendorRequest extends FormRequest
         return [
             'code' => ['required', 'string', 'max:30'],
             'name' => ['required', 'string', 'max:255'],
-            'category' => ['required', 'string', 'in:kain,pewarna,aksesori,lainnya'],
+            'category' => ['required', 'string', 'max:100'],
             'contact_person' => ['nullable', 'string', 'max:255'],
+            'contact_name' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:25'],
             'address' => ['nullable', 'string', 'max:1000'],

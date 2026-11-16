@@ -83,6 +83,11 @@ class MasterDataService
 
     public function createVendor(array $data): Vendor
     {
+        if (isset($data['contact_name']) && !isset($data['contact_person'])) {
+            $data['contact_person'] = $data['contact_name'];
+            unset($data['contact_name']);
+        }
+
         $this->validateUniqueVendor($data);
 
         return Vendor::create($data);
@@ -90,6 +95,11 @@ class MasterDataService
 
     public function updateVendor(Vendor $vendor, array $data): Vendor
     {
+        if (isset($data['contact_name']) && !isset($data['contact_person'])) {
+            $data['contact_person'] = $data['contact_name'];
+            unset($data['contact_name']);
+        }
+
         $this->validateUniqueVendor($data, $vendor->id);
 
         $vendor->update($data);
@@ -343,6 +353,9 @@ class MasterDataService
 
             if (! empty($variants)) {
                 foreach ($variants as $variant) {
+                    if (empty($variant['sku'])) {
+                        $variant['sku'] = $this->generateVariantSku($product, $variant['size'] ?? 'DEF', $variant['pattern'] ?? 'ALL');
+                    }
                     $this->validateUniqueVariant($product->id, $variant);
                     $product->variants()->create($variant);
                 }
@@ -364,6 +377,21 @@ class MasterDataService
         });
     }
 
+    public function generateVariantSku(Product $product, string $size, string $pattern): string
+    {
+        $cleanSize = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', $size));
+        $cleanPattern = strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', $pattern), 0, 6));
+        $baseSku = strtoupper($product->code).'-'.($cleanSize ?: 'ALL').'-'.($cleanPattern ?: 'VAR');
+
+        $sku = $baseSku;
+        $counter = 1;
+        while (ProductVariant::where('sku', $sku)->exists()) {
+            $sku = $baseSku.'-'.$counter++;
+        }
+
+        return $sku;
+    }
+
     public function updateProduct(Product $product, array $productData): Product
     {
         $this->validateUniqueProduct($productData, $product->id);
@@ -375,6 +403,10 @@ class MasterDataService
 
     public function saveVariant(Product $product, array $variantData, ?int $variantId = null): ProductVariant
     {
+        if (empty($variantData['sku'])) {
+            $variantData['sku'] = $this->generateVariantSku($product, $variantData['size'] ?? 'DEF', $variantData['pattern'] ?? 'ALL');
+        }
+
         $this->validateUniqueVariant($product->id, $variantData, $variantId);
 
         if ($variantId) {
